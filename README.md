@@ -100,25 +100,6 @@ ShopDroby
 │   ├── routes/
 │   ├── utils/
 │   └── index.js
-##State Management
-Redux Toolkit is used to manage the shopping cart.
-The cart supports:
-Adding products
-Removing products
-Updating quantities
-Calculating the total price
-Persisting cart data using localStorage
-##chart flow
-│Product
-   ↓
-Add to Cart
-   ↓
-Redux Store
-   ↓
-localStorage
-   ↓
-Cart Page
-   ↓
-Checkout
+ 
 
  
