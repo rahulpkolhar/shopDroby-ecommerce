@@ -4,6 +4,8 @@ import { useNavigate } from "react-router-dom";
 import { AuthContext } from "../context/authcontext";
 import { clearCart } from "../redux/cartslice";
 import "../styles/cart.css";
+import API_URL from "../config";
+
 const Checkout = () => {
   const { user } = useContext(AuthContext);
   const cartItems = useSelector((state) => state.cart.cartItems);
@@ -17,6 +19,7 @@ const Checkout = () => {
     postalCode: "",
     country: "",
   });
+
   const [paymentMethod, setPaymentMethod] = useState("ONLINE");
 
   const totalPrice = cartItems.reduce(
@@ -27,7 +30,7 @@ const Checkout = () => {
   const handlePayment = async () => {
     try {
       const orderRes = await fetch(
-        "http://localhost:5000/api/payment/create-order",
+        `${API_URL}/api/payment/create-order`,
         {
           method: "POST",
           headers: {
@@ -61,7 +64,7 @@ const Checkout = () => {
 
         handler: async function (response) {
           const verifyRes = await fetch(
-            "http://localhost:5000/api/payment/verify-payment",
+            `${API_URL}/api/payment/verify-payment`,
             {
               method: "POST",
               headers: {
@@ -77,21 +80,21 @@ const Checkout = () => {
           }
 
           const saveOrderRes = await fetch(
-            "http://localhost:5000/api/orders",
+            `${API_URL}/api/orders`,
             {
               method: "POST",
               headers: {
                 "Content-Type": "application/json",
                 Authorization: `Bearer ${user.token}`,
               },
-             body: JSON.stringify({
-  items: cartItems,
-  totalAmount: totalPrice,
-  address,
-  paymentId: response.razorpay_payment_id,
-  paymentMethod: "ONLINE",
-  paymentStatus: "Paid",
-}),
+              body: JSON.stringify({
+                items: cartItems,
+                totalAmount: totalPrice,
+                address,
+                paymentId: response.razorpay_payment_id,
+                paymentMethod: "ONLINE",
+                paymentStatus: "Paid",
+              }),
             }
           );
 
@@ -121,10 +124,11 @@ const Checkout = () => {
       alert("Something went wrong");
     }
   };
-   const handleCOD = async () => {
+
+  const handleCOD = async () => {
     try {
       const saveOrderRes = await fetch(
-        "http://localhost:5000/api/orders",
+        `${API_URL}/api/orders`,
         {
           method: "POST",
           headers: {
@@ -153,128 +157,128 @@ const Checkout = () => {
     }
   };
 
- const handleSubmit = (e) => {
-  e.preventDefault();
+  const handleSubmit = (e) => {
+    e.preventDefault();
 
-  if (!user) {
-    alert("Please login first");
-    navigate("/login");
-    return;
-  }
+    if (!user) {
+      alert("Please login first");
+      navigate("/login");
+      return;
+    }
 
-  if (paymentMethod === "ONLINE") {
-    handlePayment();
-  } else {
-    handleCOD();
-  }
-};
- return (
-  <div className="checkout-container">
-    <h2>Checkout</h2>
+    if (paymentMethod === "ONLINE") {
+      handlePayment();
+    } else {
+      handleCOD();
+    }
+  };
 
-    <div className="checkout-content">
-      <form onSubmit={handleSubmit} className="shipping-form">
-        <h3>Shipping Address</h3>
+  return (
+    <div className="checkout-container">
+      <h2>Checkout</h2>
 
-        <input
-          type="text"
-          placeholder="Full Name"
-          required
-          value={address.fullName}
-          onChange={(e) =>
-            setAddress({ ...address, fullName: e.target.value })
-          }
-        />
+      <div className="checkout-content">
+        <form onSubmit={handleSubmit} className="shipping-form">
+          <h3>Shipping Address</h3>
 
-        <input
-          type="text"
-          placeholder="Street"
-          required
-          value={address.street}
-          onChange={(e) =>
-            setAddress({ ...address, street: e.target.value })
-          }
-        />
-
-        <input
-          type="text"
-          placeholder="City"
-          required
-          value={address.city}
-          onChange={(e) =>
-            setAddress({ ...address, city: e.target.value })
-          }
-        />
-
-        <input
-          type="text"
-          placeholder="Postal Code"
-          required
-          value={address.postalCode}
-          onChange={(e) =>
-            setAddress({
-              ...address,
-              postalCode: e.target.value,
-            })
-          }
-        />
-
-        <input
-          type="text"
-          placeholder="Country"
-          required
-          value={address.country}
-          onChange={(e) =>
-            setAddress({
-              ...address,
-              country: e.target.value,
-            })
-          }
-        />
-
-        <h3>Select Payment Method</h3>
-
-        <label>
           <input
-            type="radio"
-            name="payment"
-            value="ONLINE"
-            checked={paymentMethod === "ONLINE"}
-            onChange={(e) => setPaymentMethod(e.target.value)}
+            type="text"
+            placeholder="Full Name"
+            required
+            value={address.fullName}
+            onChange={(e) =>
+              setAddress({ ...address, fullName: e.target.value })
+            }
           />
-          Online Payment (Razorpay)
-        </label>
 
-        <br />
-        <br />
-
-        <label>
           <input
-            type="radio"
-            name="payment"
-            value="COD"
-            checked={paymentMethod === "COD"}
-            onChange={(e) => setPaymentMethod(e.target.value)}
+            type="text"
+            placeholder="Street"
+            required
+            value={address.street}
+            onChange={(e) =>
+              setAddress({ ...address, street: e.target.value })
+            }
           />
-          Cash On Delivery
-        </label>
 
-        <br />
-        <br />
+          <input
+            type="text"
+            placeholder="City"
+            required
+            value={address.city}
+            onChange={(e) =>
+              setAddress({ ...address, city: e.target.value })
+            }
+          />
 
-        <div className="checkout-summary">
-          <h4>Total to Pay: ₹{totalPrice.toFixed(2)}</h4>
+          <input
+            type="text"
+            placeholder="Postal Code"
+            required
+            value={address.postalCode}
+            onChange={(e) =>
+              setAddress({
+                ...address,
+                postalCode: e.target.value,
+              })
+            }
+          />
 
-          <button type="submit" className="btn">
-            {paymentMethod === "ONLINE"
-              ? "Pay Now"
-              : "Place Order"}
-          </button>
-        </div>
-      </form>
+          <input
+            type="text"
+            placeholder="Country"
+            required
+            value={address.country}
+            onChange={(e) =>
+              setAddress({
+                ...address,
+                country: e.target.value,
+              })
+            }
+          />
+
+          <h3>Select Payment Method</h3>
+
+          <label>
+            <input
+              type="radio"
+              name="payment"
+              value="ONLINE"
+              checked={paymentMethod === "ONLINE"}
+              onChange={(e) => setPaymentMethod(e.target.value)}
+            />
+            Online Payment (Razorpay)
+          </label>
+
+          <br />
+          <br />
+
+          <label>
+            <input
+              type="radio"
+              name="payment"
+              value="COD"
+              checked={paymentMethod === "COD"}
+              onChange={(e) => setPaymentMethod(e.target.value)}
+            />
+            Cash On Delivery
+          </label>
+
+          <br />
+          <br />
+
+          <div className="checkout-summary">
+            <h4>Total to Pay: ₹{totalPrice.toFixed(2)}</h4>
+
+            <button type="submit" className="btn">
+              {paymentMethod === "ONLINE"
+                ? "Pay Now"
+                : "Place Order"}
+            </button>
+          </div>
+        </form>
+      </div>
     </div>
-  </div>
-
   );
 };
 
