@@ -23,13 +23,11 @@ const ProductDetail = () => {
         }
 
         const data = await res.json();
-
         setProduct(data);
 
       } catch (error) {
         console.error('Error fetching product:', error);
         setProduct(null);
-
       } finally {
         setLoading(false);
       }
@@ -39,30 +37,24 @@ const ProductDetail = () => {
   }, [id]);
 
   const handleAddToCart = () => {
-    if (product) {
-      dispatch(
-        addToCart({
-          productId: product._id,
-          name: product.name,
-          price: product.price,
-          imageUrl: product.imageUrl || product.image,
-          qty: 1
-        })
-      );
+    if (!product) return;
 
-      alert('Successfully added to your cart!');
-    }
+    dispatch(
+      addToCart({
+        productId: product._id,
+        name: product.name,
+        price: product.price,
+        image: product.image,
+        qty: 1
+      })
+    );
+
+    alert('Successfully added to your cart!');
   };
 
   if (loading) {
     return (
-      <div
-        style={{
-          textAlign: 'center',
-          margin: '100px',
-          color: '#f97316'
-        }}
-      >
+      <div style={{ textAlign: 'center', margin: '100px', color: '#f97316' }}>
         Loading Product...
       </div>
     );
@@ -70,13 +62,7 @@ const ProductDetail = () => {
 
   if (!product) {
     return (
-      <div
-        style={{
-          textAlign: 'center',
-          margin: '100px',
-          color: '#ef4444'
-        }}
-      >
+      <div style={{ textAlign: 'center', margin: '100px', color: '#ef4444' }}>
         Product Not Found
       </div>
     );
@@ -91,8 +77,7 @@ const ProductDetail = () => {
         padding: '20px'
       }}
     >
-
-      {/* Breadcrumb Navigation */}
+      {/* Breadcrumb */}
       <div
         style={{
           color: '#a1a1aa',
@@ -100,47 +85,30 @@ const ProductDetail = () => {
           fontSize: '0.95rem'
         }}
       >
-        <Link to="/" style={{ color: '#f97316' }}>
-          Home
-        </Link>
-
+        <Link to="/" style={{ color: '#f97316' }}>Home</Link>
         {' / '}
-
-        <Link to="/shop" style={{ color: '#f97316' }}>
-          Shop
-        </Link>
-
+        <Link to="/shop" style={{ color: '#f97316' }}>Shop</Link>
         {' / '}
-
         {product.category}
-
         {' / '}
-
-        <span style={{ color: '#fff' }}>
-          {product.name}
-        </span>
+        <span style={{ color: '#fff' }}>{product.name}</span>
       </div>
 
       <div className="product-detail">
 
-        {/* Product Image */}
+        {/* Image */}
         <div className="detail-image-container">
           <img
-            src={product.imageUrl || product.image}
+            src={product.image}
             alt={product.name}
             className="detail-image"
           />
         </div>
 
-        {/* Product Information */}
+        {/* Product Info */}
         <div className="detail-info">
 
-          <h2
-            style={{
-              fontSize: '2.8rem',
-              marginBottom: '10px'
-            }}
-          >
+          <h2 style={{ fontSize: '2.8rem', marginBottom: '10px' }}>
             {product.name}
           </h2>
 
@@ -154,65 +122,37 @@ const ProductDetail = () => {
             ₹{Number(product.price).toFixed(2)}
           </p>
 
-          {/* Description */}
           <div style={{ marginBottom: '25px' }}>
-
-            <h4
-              style={{
-                color: '#fff',
-                marginBottom: '10px'
-              }}
-            >
+            <h4 style={{ color: '#fff', marginBottom: '10px' }}>
               Product Description
             </h4>
 
-            <p
-              style={{
-                color: '#a1a1aa',
-                lineHeight: '1.8'
-              }}
-            >
+            <p style={{ color: '#a1a1aa', lineHeight: '1.8' }}>
               {product.description}
             </p>
-
           </div>
 
-          {/* Add to Cart */}
-          <div
+          <button
+            onClick={handleAddToCart}
+            className="btn"
+            disabled={product.stock <= 0}
             style={{
-              display: 'flex',
-              alignItems: 'center',
-              gap: '20px'
+              width: '100%',
+              padding: '18px',
+              fontSize: '1.2rem',
+              cursor: product.stock <= 0 ? 'not-allowed' : 'pointer',
+              opacity: product.stock <= 0 ? 0.6 : 1
             }}
           >
+            {product.stock > 0
+              ? 'Add to Shopping Cart'
+              : 'Out of Stock'}
+          </button>
 
-            <button
-              onClick={handleAddToCart}
-              className="btn"
-              disabled={product.stock <= 0}
-              style={{
-                flexGrow: '1',
-                padding: '18px',
-                fontSize: '1.2rem',
-                cursor: product.stock <= 0 ? 'not-allowed' : 'pointer',
-                opacity: product.stock <= 0 ? 0.6 : 1
-              }}
-            >
-              {product.stock > 0
-                ? 'Add to Shopping Cart'
-                : 'Out of Stock'}
-            </button>
-
-          </div>
-
-          {/* Stock */}
           <p
             style={{
               marginTop: '20px',
-              color:
-                product.stock > 0
-                  ? '#10b981'
-                  : '#ef4444',
+              color: product.stock > 0 ? '#10b981' : '#ef4444',
               fontWeight: '600'
             }}
           >
