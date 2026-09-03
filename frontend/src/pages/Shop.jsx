@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import ProductCard from '../components/productcard';
 import '../styles/product.css';
+import API_URL from '../config';
 
 const Shop = () => {
   const [products, setProducts] = useState([]);
@@ -10,7 +11,7 @@ const Shop = () => {
   useEffect(() => {
     const fetchProducts = async () => {
       try {
-        const res = await fetch('/api/products');
+        fetch(`${API_URL}/api/products`)
         const data = await res.json();
         setProducts(data);
       } catch (error) {

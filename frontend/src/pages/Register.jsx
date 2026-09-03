@@ -8,19 +8,27 @@ const Register = () => {
   const [name, setName] = useState('');
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
+  const [loading, setLoading] = useState(false);
+
   const { login } = useContext(AuthContext);
   const navigate = useNavigate();
 
   const handleSubmit = async (e) => {
     e.preventDefault();
 
+    setLoading(true);
+
     try {
       const res = await fetch(`${API_URL}/api/auth/register`, {
         method: 'POST',
-        headers: { 
-          'Content-Type': 'application/json' 
+        headers: {
+          'Content-Type': 'application/json'
         },
-        body: JSON.stringify({ name, email, password })
+        body: JSON.stringify({
+          name,
+          email,
+          password
+        })
       });
 
       const data = await res.json();
@@ -31,18 +39,22 @@ const Register = () => {
         login(data);
         navigate('/');
       } else {
-        alert(data.message);
+        alert(data.message || 'Registration failed');
       }
 
     } catch (error) {
-      console.error("Registration error:", error);
-      alert("Registration failed. Please try again.");
+      console.error('Registration error:', error);
+      alert('Registration failed. Please try again.');
+
+    } finally {
+      setLoading(false);
     }
   };
 
   return (
     <div className="auth-container">
       <form onSubmit={handleSubmit} className="auth-form">
+
         <h2>Register</h2>
 
         <input
@@ -69,13 +81,19 @@ const Register = () => {
           required
         />
 
-        <button type="submit" className="btn">
-          Register
+        <button
+          type="submit"
+          className="btn"
+          disabled={loading}
+        >
+          {loading ? 'Registering...' : 'Register'}
         </button>
 
         <p>
-          Already have an account? <Link to="/login">Login</Link>
+          Already have an account?{' '}
+          <Link to="/login">Login</Link>
         </p>
+
       </form>
     </div>
   );

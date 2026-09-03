@@ -7,11 +7,15 @@ import '../styles/auth.css';
 const Login = () => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
+  const [loading, setLoading] = useState(false);
+
   const { login } = useContext(AuthContext);
   const navigate = useNavigate();
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+
+    setLoading(true);
 
     try {
       const res = await fetch(`${API_URL}/api/auth/login`, {
@@ -19,7 +23,10 @@ const Login = () => {
         headers: {
           'Content-Type': 'application/json'
         },
-        body: JSON.stringify({ email, password })
+        body: JSON.stringify({
+          email,
+          password
+        })
       });
 
       const data = await res.json();
@@ -28,18 +35,22 @@ const Login = () => {
         login(data);
         navigate('/');
       } else {
-        alert(data.message || "Invalid email or password");
+        alert(data.message || 'Invalid email or password');
       }
 
     } catch (error) {
-      console.error("Login error:", error);
-      alert("Login failed. Please try again.");
+      console.error('Login error:', error);
+      alert('Login failed. Please try again.');
+
+    } finally {
+      setLoading(false);
     }
   };
 
   return (
     <div className="auth-container">
       <form onSubmit={handleSubmit} className="auth-form">
+
         <h2>Login</h2>
 
         <input
@@ -58,13 +69,19 @@ const Login = () => {
           required
         />
 
-        <button type="submit" className="btn">
-          Login
+        <button
+          type="submit"
+          className="btn"
+          disabled={loading}
+        >
+          {loading ? 'Logging in...' : 'Login'}
         </button>
 
         <p>
-          Don't have an account? <Link to="/register">Register</Link>
+          Don't have an account?{' '}
+          <Link to="/register">Register</Link>
         </p>
+
       </form>
     </div>
   );
