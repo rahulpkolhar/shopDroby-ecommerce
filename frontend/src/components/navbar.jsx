@@ -23,12 +23,16 @@ const Navbar = () => {
         </Link>
       </div>
       <ul className="navbar-links">
+        <li><Link to="/">Home</Link></li>
         <li><Link to="/shop">Shop</Link></li>
         <li><Link to="/cart">Cart ({cartItems.length})</Link></li>
         {user ? (
           <>
-            <li><Link to="/profile">Hi, {user.name}</Link></li>
+            <li><Link to="/profile">My Orders</Link></li>
+            {user.role === 'seller' && <li><Link to="/admin">Seller Dashboard</Link></li>}
+            {user.role === 'seller' && <li><Link to="/admin/add-product">Add Product</Link></li>}
             {user.role === 'admin' && <li><Link to="/admin">Admin</Link></li>}
+            <li><Link to="/profile">{user.name} ({user.role === 'seller' ? 'Seller' : user.role === 'admin' ? 'Admin' : 'Customer'})</Link></li>
             <li><button onClick={handleLogout} className="btn-logout">Logout</button></li>
           </>
         ) : (

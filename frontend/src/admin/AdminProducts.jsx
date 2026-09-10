@@ -12,7 +12,7 @@ const AdminProducts = () => {
 
   // Check admin access
   useEffect(() => {
-    if (!user || user.role !== 'admin') {
+    if (!user || !['seller', 'admin'].includes(user.role)) {
       navigate('/');
     }
   }, [user, navigate]);
@@ -20,8 +20,17 @@ const AdminProducts = () => {
   // Fetch products
   useEffect(() => {
     const fetchProducts = async () => {
+      if (!user || !['seller', 'admin'].includes(user.role)) {
+        return;
+      }
+
       try {
-        const res = await fetch(`${API_URL}/api/products`);
+        const endpoint = user.role === 'seller' ? '/api/products/mine' : '/api/products';
+        const res = await fetch(`${API_URL}${endpoint}`, {
+          headers: user.role === 'seller'
+            ? { Authorization: `Bearer ${user.token}` }
+            : undefined
+        });
 
         const data = await res.json();
 
@@ -37,7 +46,7 @@ const AdminProducts = () => {
     };
 
     fetchProducts();
-  }, []);
+  }, [user]);
 
   // Delete product
   const handleDelete = async (id) => {
@@ -86,7 +95,7 @@ const AdminProducts = () => {
     }
   };
 
-  if (!user || user.role !== 'admin') {
+  if (!user || !['seller', 'admin'].includes(user.role)) {
     return null;
   }
 

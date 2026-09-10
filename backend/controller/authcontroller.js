@@ -13,7 +13,17 @@ const generateToken = (id) => {
 
 // REGISTER USER
 const registeruser = async (req, res) => {
-    const { name, email, password } = req.body;
+    const { name, email, password, role = "user" } = req.body;
+
+    if (!['user', 'seller'].includes(role)) {
+        return res.status(400).json({
+            message: "Invalid account type"
+        });
+    }
+
+    if (!name || !email || !password) {
+        return res.status(400).json({ message: "Name, email, and password are required" });
+    }
 
     try {
         // Check existing user
@@ -21,7 +31,7 @@ const registeruser = async (req, res) => {
 
         if (existingUser) {
             return res.status(400).json({
-                message: "User already exists"
+                message: "Email already registered"
             });
         }
 
@@ -33,7 +43,8 @@ const registeruser = async (req, res) => {
         const newUser = await User.create({
             name,
             email,
-            password: hashedPassword
+            password: hashedPassword,
+            role
         });
 
         // Registration successful

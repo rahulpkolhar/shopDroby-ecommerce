@@ -9,7 +9,7 @@ const AdminDashboard = () => {
   const [stats, setStats] = useState(null);
 
   useEffect(() => {
-    if (!user || user.role !== 'admin') {
+    if (!user || !['seller', 'admin'].includes(user.role)) {
       navigate('/');
       return;
     }
@@ -101,7 +101,7 @@ const AdminDashboard = () => {
         />
 
         <h2 style={{ margin: 0 }}>
-          Admin Dashboard
+          {user.role === 'seller' ? 'Seller Dashboard' : 'Admin Dashboard'}
         </h2>
 
       </div>
@@ -193,11 +193,11 @@ const AdminDashboard = () => {
         border: '1px solid rgba(255,255,255,0.05)'
       }}>
 
-        <h3 style={{
+          <h3 style={{
           marginBottom: '25px',
           color: '#f97316'
         }}>
-          Administrative Controls
+          {user.role === 'seller' ? 'Seller Controls' : 'Administrative Controls'}
         </h3>
 
         <div style={{
@@ -221,21 +221,25 @@ const AdminDashboard = () => {
             📦 Manage Products
           </button>
 
-          <button
-            className="btn"
-            onClick={() => navigate('/admin/orders')}
-            style={{ background: '#3f3f46' }}
-          >
-            🚚 Manage Orders
-          </button>
+          {user.role === 'admin' && (
+            <>
+              <button
+                className="btn"
+                onClick={() => navigate('/admin/orders')}
+                style={{ background: '#3f3f46' }}
+              >
+                🚚 Manage Orders
+              </button>
 
-          <button
-            className="btn"
-            onClick={() => navigate('/admin/users')}
-            style={{ background: '#3f3f46' }}
-          >
-            👥 Users Directory
-          </button>
+              <button
+                className="btn"
+                onClick={() => navigate('/admin/users')}
+                style={{ background: '#3f3f46' }}
+              >
+                👥 Users Directory
+              </button>
+            </>
+          )}
 
         </div>
       </div>

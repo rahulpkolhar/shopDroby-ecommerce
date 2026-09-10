@@ -38,6 +38,11 @@ const productSchema = new mongoose.Schema(
         required: true,
     },
 
+    seller: {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: "User",
+    },
+
     ratings: {
         type: Number,
         default: 0,

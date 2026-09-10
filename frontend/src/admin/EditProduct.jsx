@@ -22,7 +22,7 @@ const EditProduct = () => {
 
   // Check admin
   useEffect(() => {
-    if (!user || user.role !== 'admin') {
+    if (!user || !['seller', 'admin'].includes(user.role)) {
       navigate('/');
     }
   }, [user, navigate]);
@@ -113,7 +113,7 @@ const EditProduct = () => {
   };
 
 
-  if (!user || user.role !== 'admin') {
+  if (!user || !['seller', 'admin'].includes(user.role)) {
     return null;
   }
 

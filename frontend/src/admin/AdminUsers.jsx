@@ -1,13 +1,20 @@
 import React, { useEffect, useState, useContext } from 'react';
 import { AuthContext } from '../context/authcontext';
+import API_URL from '../config';
 
 const AdminUsers = () => {
   const { user } = useContext(AuthContext);
   const [users, setUsers] = useState([]);
 
   useEffect(() => {
+    if (!user || user.role !== 'admin') {
+      window.location.href = '/';
+    }
+  }, [user]);
+
+  useEffect(() => {
     const fetchUsers = async () => {
-      const res = await fetch('/api/auth/users', {
+      const res = await fetch(`${API_URL}/api/auth/users`, {
         headers: { Authorization: `Bearer ${user.token}` }
       });
       const data = await res.json();

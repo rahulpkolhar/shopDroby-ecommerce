@@ -73,3 +73,76 @@
 .auth-form a:hover {
   text-decoration: underline;
 }
+
+.auth-subtitle {
+  margin-top: -8px !important;
+}
+
+.account-options {
+  display: grid;
+  gap: 14px;
+}
+
+.account-option {
+  display: grid;
+  gap: 6px;
+  padding: 18px;
+  text-align: left;
+  color: #a1a1aa;
+  background: #09090b;
+  border: 1px solid #27272a;
+  border-radius: 10px;
+  cursor: pointer;
+  font: inherit;
+  transition: border-color 0.2s ease, transform 0.2s ease, background 0.2s ease;
+}
+
+.account-option:hover {
+  border-color: #f97316;
+  background: rgba(249, 115, 22, 0.08);
+  transform: translateY(-2px);
+}
+
+.account-option strong {
+  color: #fff;
+  font-size: 1.05rem;
+}
+
+.account-icon {
+  font-size: 1.8rem;
+}
+
+.selected-account {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 12px;
+  color: #a1a1aa;
+  background: rgba(249, 115, 22, 0.08);
+  border: 1px solid rgba(249, 115, 22, 0.35);
+  border-radius: 8px;
+}
+
+.selected-account strong {
+  color: #f97316;
+}
+
+.selected-account button {
+  margin-left: auto;
+  color: #f97316;
+  background: none;
+  border: 0;
+  cursor: pointer;
+  font: inherit;
+}
+
+.auth-error {
+  color: #f87171 !important;
+  margin: 0 !important;
+}
+
+.register-form > form {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}

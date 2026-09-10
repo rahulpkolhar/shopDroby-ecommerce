@@ -2,10 +2,10 @@ const express = require("express");
 const router = express.Router();
 
 const { protect } = require("../middleware/authmiddleware");
-const { admin } = require("../middleware/adminmiddleware");
+const { seller } = require("../middleware/sellermiddleware");
 const { getAdminstats } = require("../controller/analysticcontroller");
 
  
-router.get("/", protect, admin, getAdminstats);
+router.get("/", protect, seller, getAdminstats);
 
 module.exports = router;

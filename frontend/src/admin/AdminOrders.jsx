@@ -5,14 +5,21 @@ import React, {
   useCallback,
 } from "react";
 import { AuthContext } from "../context/authcontext";
+import API_URL from "../config";
 
 const AdminOrders = () => {
   const { user } = useContext(AuthContext);
   const [orders, setOrders] = useState([]);
 
+  useEffect(() => {
+    if (!user || user.role !== 'admin') {
+      window.location.href = '/';
+    }
+  }, [user]);
+
   const fetchOrders = useCallback(async () => {
     try {
-      const res = await fetch("/api/orders", {
+      const res = await fetch(`${API_URL}/api/orders`, {
         headers: {
           Authorization: `Bearer ${user.token}`,
         },
@@ -42,7 +49,7 @@ const AdminOrders = () => {
 
   const updateStatus = async (id, status) => {
     try {
-      const res = await fetch(`/api/orders/${id}/status`, {
+      const res = await fetch(`${API_URL}/api/orders/${id}/status`, {
         method: "PUT",
         headers: {
           "Content-Type": "application/json",

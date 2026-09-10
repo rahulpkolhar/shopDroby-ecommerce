@@ -23,6 +23,15 @@ const getProductById = async (req, res) => {
   }
 };
 
+const getMyProducts = async (req, res) => {
+  try {
+    const products = await Product.find({ seller: req.user._id });
+    res.json(products);
+  } catch (error) {
+    res.status(500).json({ message: error.message });
+  }
+};
+
 const createProduct = async (req, res) => {
   try {
     const { name, description, price, category, stock } = req.body;
@@ -32,7 +41,8 @@ const createProduct = async (req, res) => {
       imageUrl = result.secure_url;
     }
     const product = new Product({
-      name, description, price, category, stock, imageUrl
+      name, description, price, category, stock, imageUrl,
+      seller: req.user.role === 'seller' ? req.user._id : undefined
     });
     const createdProduct = await product.save();
     res.status(201).json(createdProduct);
@@ -46,11 +56,15 @@ const updateProduct = async (req, res) => {
     const { name, description, price, category, stock } = req.body;
     const product = await Product.findById(req.params.id);
     if (product) {
-      product.name = name || product.name;
-      product.description = description || product.description;
-      product.price = price || product.price;
-      product.category = category || product.category;
-      product.stock = stock || product.stock;
+      if (req.user.role === 'seller' && String(product.seller) !== String(req.user._id)) {
+        return res.status(403).json({ message: 'Seller access required' });
+      }
+
+      product.name = name !== undefined ? name : product.name;
+      product.description = description !== undefined ? description : product.description;
+      product.price = price !== undefined ? price : product.price;
+      product.category = category !== undefined ? category : product.category;
+      product.stock = stock !== undefined ? stock : product.stock;
 
       if (req.file) {
         const result = await cloudinary.uploader.upload(req.file.path);
@@ -70,6 +84,10 @@ const deleteProduct = async (req, res) => {
   try {
     const product = await Product.findById(req.params.id);
     if (product) {
+      if (req.user.role === 'seller' && String(product.seller) !== String(req.user._id)) {
+        return res.status(403).json({ message: 'Seller access required' });
+      }
+
       await product.deleteOne();
       res.json({ message: 'Product removed' });
     } else {
@@ -80,4 +98,4 @@ const deleteProduct = async (req, res) => {
   }
 };
 
-module.exports = { getProducts, getProductById, createProduct, updateProduct, deleteProduct };
+module.exports = { getProducts, getProductById, getMyProducts, createProduct, updateProduct, deleteProduct };

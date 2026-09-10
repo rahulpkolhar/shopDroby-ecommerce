@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState } from 'react'; 
 import { useParams, Link } from 'react-router-dom';
 import { useDispatch } from 'react-redux';
 import { addToCart } from '../redux/cartslice';
@@ -44,7 +44,7 @@ const ProductDetail = () => {
         productId: product._id,
         name: product.name,
         price: product.price,
-        image: product.image,
+        image: product.imageUrl,
         qty: 1
       })
     );
@@ -77,7 +77,6 @@ const ProductDetail = () => {
         padding: '20px'
       }}
     >
-      {/* Breadcrumb */}
       <div
         style={{
           color: '#a1a1aa',
@@ -99,7 +98,7 @@ const ProductDetail = () => {
         {/* Image */}
         <div className="detail-image-container">
           <img
-            src={product.image}
+            src={product.imageUrl}
             alt={product.name}
             className="detail-image"
           />

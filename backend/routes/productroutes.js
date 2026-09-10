@@ -2,11 +2,12 @@ const express = require("express");
 const multer = require("multer");
 
 const { protect } = require("../middleware/authmiddleware");
-const { admin } = require("../middleware/adminmiddleware");
+const { seller } = require("../middleware/sellermiddleware");
 
 const {
   getProducts,
   getProductById,
+  getMyProducts,
   createProduct,
   updateProduct,
   deleteProduct,
@@ -19,12 +20,16 @@ const router = express.Router();
 router
   .route("/")
   .get(getProducts)
-  .post(protect, admin, upload.single("image"), createProduct);
+  .post(protect, seller, upload.single("image"), createProduct);
+
+router
+  .route("/mine")
+  .get(protect, seller, getMyProducts);
 
 router
   .route("/:id")
   .get(getProductById)
-  .put(protect, admin, upload.single("image"), updateProduct)
-  .delete(protect, admin, deleteProduct);
+  .put(protect, seller, upload.single("image"), updateProduct)
+  .delete(protect, seller, deleteProduct);
 
 module.exports = router;

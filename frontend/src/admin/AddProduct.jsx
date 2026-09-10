@@ -20,12 +20,12 @@ const AddProduct = () => {
 
   // Redirect if user is not admin
   useEffect(() => {
-    if (!user || user.role !== 'admin') {
+    if (!user || !['seller', 'admin'].includes(user.role)) {
       navigate('/');
     }
   }, [user, navigate]);
 
-  if (!user || user.role !== 'admin') {
+  if (!user || !['seller', 'admin'].includes(user.role)) {
     return null;
   }
 
