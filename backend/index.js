@@ -13,7 +13,8 @@ app.use(cors({
     origin: [
         "http://localhost:3000",
         "http://127.0.0.1:3000",
-        "https://shop-droby-ecommerce.vercel.app"
+        "https://shop-droby-ecommerce.vercel.app",
+        "https://shop-droby-ecommerce-dmqs.vercel.app"
     ],
     credentials: true
 }));
