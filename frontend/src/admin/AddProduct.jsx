@@ -60,7 +60,7 @@ const AddProduct = () => {
 
       if (res.ok) {
         alert('Product created successfully!');
-        navigate('/shop');
+        navigate('/admin/products');
       } else {
         alert(responseData.message || 'Error creating product');
       }
