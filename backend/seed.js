@@ -63,8 +63,7 @@ const seedData = async () => {
         price: 4999,
         category: 'Furniture',
         stock: 10,
-        imageUrl: 'https://images.unsplash.com/photo-1586158291808-4b2d6ca06e9f?auto=format&fit=crop&w=800&q=80',
-        ratings: 4.7,
+        imageUrl:   'https://images.unsplash.com/photo-1580480055273-228ff5388ef8?auto=format&fit=crop&w=800&q=80',
         numReviews: 15,
       },
     ];
