@@ -9,17 +9,19 @@ connectdb();
 
 const app = express();
 
-// CORS - Local development only
+// CORS
 app.use(
   cors({
     origin: [
       "http://localhost:3000",
-      "http://127.0.0.1:3000"
+      "http://127.0.0.1:3000",
+      "https://shopdroby-ecommerce-production-d14f.up.railway.app"
     ],
     credentials: true
   })
 );
 
+// Middleware
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
@@ -35,6 +37,7 @@ app.use("/api/orders", require("./routes/orderroutes"));
 app.use("/api/payment", require("./routes/paymentroutes"));
 app.use("/api/analytics", require("./routes/analyticsroutes.js"));
 
+// Port
 const PORT = process.env.PORT || 5000;
 
 app.listen(PORT, () => {
